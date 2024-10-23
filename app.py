@@ -6,7 +6,7 @@ from fractions import Fraction
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recetas.db'
-app.config['SECRET_KEY'] = '19150909'  # Required for flashing messages
+app.config['SECRET_KEY'] = ''
 db = SQLAlchemy(app)
 
 # Model for Recipes
@@ -19,15 +19,6 @@ class Recipe(db.Model):
     def __repr__(self):
         return f'<Recipe {self.name}>'
 
-# # Model for Weekly Meal Plan
-# class MealPlan(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     day = db.Column(db.String(50), nullable=False)
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-#     recipe = db.relationship('Recipe', backref='meal_plans')
-
-#     def __repr__(self):
-#         return f'<PlanSemanal {self.day}: {self.recipe}>'
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -57,10 +48,10 @@ def delete_recipe(id):
     try:
         db.session.delete(recipe_to_delete)
         db.session.commit()
-        return '', 204  # No content response on success
+        return '', 204
     except Exception as e:
         db.session.rollback()
-        return str(e), 400  # Return error message
+        return str(e), 400
 
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])

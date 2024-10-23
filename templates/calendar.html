@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Plan de comida semanal</title>
+</head>
+
+<body>
+    <div class="container" style="text-align: center;">
+        <h1 style="text-align: center; font-size: 50px;">Plan de comida semanal</h1>
+        <form method="POST">
+            <table border="1" class="dataframe data", style="margin: 0 auto;">
+                <thead style="height: max-content; font-size: 30px; background-color: #4CAF50;">
+                    <tr style="text-align: center;">
+                        {% for day in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
+                        <th style="color: #ffffff; text-align: center; padding: 10px;" colspan="7">{{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="text-align: center; height: 300px; vertical-align: top;">
+                        {% for day in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
+                        <td rowspan="10" colspan="7" style="font-size: 21px;">
+                            <select name="{{ day.lower() }}" onchange="showIngredients('{{ day.lower() }}')" style="font-size: 15px; margin: 7px;">
+                                <option value="" data-ingredient="">Seleccionar receta</option>
+                                {% for recipe in recipes %}
+                                <option value="{{ recipe.id }}" data-ingredient="{{ recipe.ingre }}">{{ recipe.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div id="{{ day.lower() }}-ingredients" style="display:none; margin-top:10px;"></div> <!-- Container for ingredients -->
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <button type="submit" style="font-size: 18px; text-align: center;">Guardar comida de la semana</button>
+        </form>
+    </div>
+    <script>
+        function showIngredients(day) {
+            // Get the selected option from the dropdown
+            var selectElement = document.getElementsByName(day)[0];
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            // Get the ingredients from the data-ingredient attribute
+            var ingredients = selectedOption.getAttribute('data-ingredient');
+            
+            // Get the ingredients div for that day
+            var ingredientsDiv = document.getElementById(day + '-ingredients');
+            
+            // If an actual recipe is selected, show the ingredients
+            if (ingredients) {
+                ingredientsDiv.innerHTML = '<strong>Ingredientes:</strong> <br>' + ingredients.replace(/\n/g, '<br>');
+                ingredientsDiv.style.display = 'block';  // Make it visible
+            } else {
+                ingredientsDiv.style.display = 'none';  // Hide it if no recipe is selected
+            }
+        }
+        </script>
+    <br>
+<div style="text-align: center;">
+    <a href="{{ url_for('print_meal_plan') }}" class="button" style="font-size: 25px; text-align: center;">Imprimir ingredientes</a>
+    <br>
+    <a href="{{ url_for('index') }}" class="button" style="font-size: 25px">Recetas</a>
+</div>
+</body>
+</html>

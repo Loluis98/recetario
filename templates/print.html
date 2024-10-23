@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Ingredientes de la semana</title>
+</head>
+<body>
+    <div class="container">
+        <h1 style="font-size: 45px;">Ingredientes para la semana</h1>
+            <ul>
+                {% for name, quant in weekly_plan.items() %}
+                <li style="font-size: 25px;">{{ quant }} <strong>{{ name }}</strong></li>
+                {% endfor %}
+            </ul>
+        <a href="{{ url_for('calendar') }}" style="font-size: 20px;">Regresar a Calendario</a>
+    </div>
+</body>
+</html>
